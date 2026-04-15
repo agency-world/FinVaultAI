@@ -1,0 +1,13 @@
+Vendor,Invoice No,Invoice Date,Due Date,Amount,Status,Category
+Precision Parts Supply,PPS-INV-4521,2026-01-15,2026-03-01,28750.00,Paid,Materials
+ProBuild Contractors,PBC-2026-088,2026-01-22,2026-02-21,15400.00,Paid,Maintenance
+Office Depot,OD-78432,2026-02-03,2026-03-05,2847.50,Paid,Office Supplies
+Acme Consulting Group,INV-2026-0847,2026-03-15,2026-04-14,58906.25,Outstanding,Professional Services
+Summit Financial,SFS-2026-2241,2026-04-01,2026-05-01,105827.19,Outstanding,Professional Services
+CloudHost Inc.,CH-26-0091,2026-02-01,2026-03-03,4200.00,Paid,IT Services
+CloudHost Inc.,CH-26-0182,2026-03-01,2026-04-01,4200.00,Overdue,IT Services
+Delta Insurance,DI-POL-8843,2026-01-10,2026-02-10,12600.00,Paid,Insurance
+EcoClean Services,EC-2026-334,2026-03-01,2026-03-31,3200.00,Paid,Facilities
+EcoClean Services,EC-2026-445,2026-04-01,2026-04-30,3200.00,Outstanding,Facilities
+TechParts Direct,TPD-99281,2026-02-18,2026-04-04,19825.00,Overdue,Materials
+Greenfield Facilities,GF-WO-1134,2026-03-28,2026-04-28,6325.00,Outstanding,Maintenance

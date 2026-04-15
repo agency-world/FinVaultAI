@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinVault AI - LinkedIn Hero</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0a0b14;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .canvas {
+    width: 1200px;
+    height: 628px;
+    background: linear-gradient(145deg, #0f1117 0%, #131525 40%, #1a1c3a 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Ambient glow circles */
+  .glow-1 {
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+    top: -150px; right: -100px;
+    border-radius: 50%;
+  }
+  .glow-2 {
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(79,70,229,0.08) 0%, transparent 70%);
+    bottom: -100px; left: -50px;
+    border-radius: 50%;
+  }
+  .glow-3 {
+    position: absolute;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(34,197,94,0.06) 0%, transparent 70%);
+    top: 200px; left: 350px;
+    border-radius: 50%;
+  }
+
+  /* Grid pattern overlay */
+  .grid-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(99,102,241,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99,102,241,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+  }
+
+  /* Left section */
+  .left-section {
+    position: absolute;
+    top: 0; left: 0;
+    width: 460px; height: 100%;
+    padding: 48px 44px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.25);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #4ade80;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+    width: fit-content;
+  }
+  .badge .dot {
+    width: 6px; height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(34,197,94,0.6);
+  }
+
+  .main-title {
+    font-size: 42px;
+    font-weight: 800;
+    color: #e2e8f0;
+    line-height: 1.1;
+    margin-bottom: 6px;
+    letter-spacing: -1px;
+  }
+  .main-title .highlight {
+    background: linear-gradient(135deg, #818cf8, #6366f1, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    font-weight: 400;
+    color: #94a3b8;
+    line-height: 1.5;
+    margin-top: 12px;
+    margin-bottom: 24px;
+  }
+
+  .powered-by {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .powered-by .gemma-badge {
+    background: rgba(99,102,241,0.1);
+    border: 1px solid rgba(99,102,241,0.25);
+    border-radius: 8px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .powered-by .gemma-icon {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #4285f4, #34a853, #fbbc04, #ea4335);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    color: white;
+  }
+  .gemma-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .gemma-text .name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #c7d2fe;
+  }
+  .gemma-text .desc {
+    font-size: 10px;
+    color: #64748b;
+    font-weight: 400;
+  }
+
+  .lm-badge {
+    background: rgba(148,163,184,0.08);
+    border: 1px solid rgba(148,163,184,0.15);
+    border-radius: 8px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .lm-icon {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #1e293b, #334155);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 10px;
+    color: #94a3b8;
+  }
+  .lm-text .name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #94a3b8;
+  }
+  .lm-text .desc {
+    font-size: 10px;
+    color: #475569;
+  }
+
+  /* Divider */
+  .vertical-divider {
+    position: absolute;
+    left: 460px;
+    top: 60px;
+    bottom: 60px;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(99,102,241,0.2) 30%, rgba(99,102,241,0.2) 70%, transparent);
+    z-index: 2;
+  }
+
+  /* Right section - architecture */
+  .right-section {
+    position: absolute;
+    top: 0; right: 0;
+    width: 740px; height: 100%;
+    padding: 32px 40px 32px 50px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Flow diagram */
+  .flow-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* Data sources row */
+  .sources-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .source-chip {
+    background: rgba(30,27,75,0.5);
+    border: 1px solid rgba(99,102,241,0.2);
+    border-radius: 8px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #a5b4fc;
+    font-weight: 500;
+  }
+  .source-chip .icon {
+    font-size: 16px;
+  }
+
+  /* Arrow connector */
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(99,102,241,0.4);
+    font-size: 18px;
+    height: 16px;
+  }
+
+  /* Engine box */
+  .engine-box {
+    background: linear-gradient(135deg, rgba(30,27,75,0.6), rgba(49,46,129,0.3));
+    border: 1px solid rgba(99,102,241,0.3);
+    border-radius: 12px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: center;
+  }
+  .engine-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .engine-icon-box {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+  }
+  .engine-icon-box.llm {
+    background: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(129,140,248,0.2));
+    border: 1px solid rgba(99,102,241,0.3);
+  }
+  .engine-icon-box.ocr {
+    background: linear-gradient(135deg, rgba(251,191,36,0.2), rgba(245,158,11,0.15));
+    border: 1px solid rgba(251,191,36,0.25);
+  }
+  .engine-label {
+    display: flex;
+    flex-direction: column;
+  }
+  .engine-label .name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #c7d2fe;
+  }
+  .engine-label .detail {
+    font-size: 9px;
+    color: #64748b;
+  }
+  .engine-divider {
+    width: 1px;
+    height: 30px;
+    background: rgba(99,102,241,0.2);
+  }
+
+  /* Features row */
+  .features-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  .feature-card {
+    background: rgba(15,17,23,0.7);
+    border: 1px solid rgba(99,102,241,0.15);
+    border-radius: 10px;
+    padding: 16px 14px;
+    width: 200px;
+    text-align: center;
+    position: relative;
+    backdrop-filter: blur(10px);
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20%; right: 20%; height: 2px;
+    border-radius: 2px;
+  }
+  .feature-card.reports::before { background: linear-gradient(90deg, transparent, #6366f1, transparent); }
+  .feature-card.query::before { background: linear-gradient(90deg, transparent, #22c55e, transparent); }
+  .feature-card.ocr::before { background: linear-gradient(90deg, transparent, #fbbf24, transparent); }
+
+  .feature-icon {
+    font-size: 26px;
+    margin-bottom: 6px;
+  }
+  .feature-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 4px;
+  }
+  .feature-desc {
+    font-size: 10px;
+    color: #64748b;
+    line-height: 1.4;
+  }
+
+  /* Security bar */
+  .security-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 4px;
+    padding: 10px 20px;
+    background: rgba(34,197,94,0.05);
+    border: 1px solid rgba(34,197,94,0.12);
+    border-radius: 10px;
+  }
+  .security-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #4ade80;
+    font-weight: 500;
+  }
+  .security-item .check {
+    width: 16px; height: 16px;
+    background: rgba(34,197,94,0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: #22c55e;
+  }
+
+  /* Bottom bar */
+  .bottom-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #4f46e5, #6366f1, #818cf8, #22c55e, #6366f1, #4f46e5);
+  }
+
+  /* Lock icon floating */
+  .lock-float {
+    position: absolute;
+    right: 50px;
+    top: 28px;
+    width: 36px; height: 36px;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    z-index: 3;
+  }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="glow-1"></div>
+  <div class="glow-2"></div>
+  <div class="glow-3"></div>
+  <div class="grid-overlay"></div>
+
+  <!-- Left: Branding -->
+  <div class="left-section">
+    <div class="badge"><span class="dot"></span> 100% ON-DEVICE</div>
+    <div class="main-title">
+      <span class="highlight">FinVault</span> AI
+    </div>
+    <div class="subtitle">
+      Secure financial intelligence that never leaves your machine. Reports, queries and document processing powered entirely by a local LLM.
+    </div>
+    <div class="powered-by">
+      <div class="gemma-badge">
+        <div class="gemma-icon">G</div>
+        <div class="gemma-text">
+          <span class="name">Google Gemma 4</span>
+          <span class="desc">Local LLM Inference</span>
+        </div>
+      </div>
+      <div class="lm-badge">
+        <div class="lm-icon">LM</div>
+        <div class="lm-text">
+          <span class="name">LM Studio</span>
+          <span class="desc">localhost:1234</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vertical-divider"></div>
+
+  <!-- Right: Architecture -->
+  <div class="right-section">
+    <div class="flow-container">
+
+      <!-- Data Sources -->
+      <div class="sources-row">
+        <div class="source-chip"><span class="icon">📊</span> CSV / Excel</div>
+        <div class="source-chip"><span class="icon">🧾</span> Invoices</div>
+        <div class="source-chip"><span class="icon">📄</span> Work Orders</div>
+        <div class="source-chip"><span class="icon">🧮</span> Receipts</div>
+        <div class="source-chip"><span class="icon">📋</span> Purchase Orders</div>
+      </div>
+
+      <div class="flow-arrow">▼</div>
+
+      <!-- Processing Engine -->
+      <div class="engine-box">
+        <div class="engine-item">
+          <div class="engine-icon-box llm">🧠</div>
+          <div class="engine-label">
+            <span class="name">Gemma 4 LLM</span>
+            <span class="detail">Temp 0.15 · 2048 tokens · Top-P 0.95</span>
+          </div>
+        </div>
+        <div class="engine-divider"></div>
+        <div class="engine-item">
+          <div class="engine-icon-box ocr">👁</div>
+          <div class="engine-label">
+            <span class="name">Tesseract OCR</span>
+            <span class="detail">v5.5 · Local Engine</span>
+          </div>
+        </div>
+        <div class="engine-divider"></div>
+        <div class="engine-item">
+          <div class="engine-icon-box llm">⚡</div>
+          <div class="engine-label">
+            <span class="name">Streamlit UI</span>
+            <span class="detail">Dark Theme · localhost:8501</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow">▼</div>
+
+      <!-- Feature Cards -->
+      <div class="features-row">
+        <div class="feature-card reports">
+          <div class="feature-icon">📈</div>
+          <div class="feature-name">Report Generator</div>
+          <div class="feature-desc">AI powered financial reports with charts and metrics</div>
+        </div>
+        <div class="feature-card query">
+          <div class="feature-icon">💬</div>
+          <div class="feature-name">Data Query</div>
+          <div class="feature-desc">Natural language questions with step by step answers</div>
+        </div>
+        <div class="feature-card ocr">
+          <div class="feature-icon">🔍</div>
+          <div class="feature-name">Document OCR</div>
+          <div class="feature-desc">Extract and parse invoices, receipts and work orders</div>
+        </div>
+      </div>
+
+      <!-- Security Footer -->
+      <div class="security-bar">
+        <div class="security-item"><span class="check">✓</span> Air-Gapped</div>
+        <div class="security-item"><span class="check">✓</span> Zero Cloud</div>
+        <div class="security-item"><span class="check">✓</span> SOX / GDPR Ready</div>
+        <div class="security-item"><span class="check">✓</span> No Internet Required</div>
+        <div class="security-item"><span class="check">✓</span> Data Never Leaves</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="lock-float">🔒</div>
+  <div class="bottom-bar"></div>
+</div>
+</body>
+</html>
